@@ -1,0 +1,23 @@
+dynamo:
+  restart: always
+  build: ./dynamo
+  expose:
+    - "8000"
+  links:
+    - postgres:postgres
+  volumes:
+    - /usr/src/app/static
+  env_file: .env
+  command: gunicorn -c "python:config.gunicorn" --reload "dynamo.app:create_app()"
+
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - dynamo
+  links:
+    - dynamo:dynamo
