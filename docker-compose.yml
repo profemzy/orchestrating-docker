@@ -1,21 +1,24 @@
-dynamo:
-  restart: always
-  build: ./dynamo
-  expose:
-    - "8000"
-  volumes:
-    - /usr/src/app/static
-  env_file: .env
-  command: gunicorn -c "python:config.gunicorn" --reload "dynamo.app:create_app()"
+version: '3'
+services:
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - dynamo
-  links:
-    - dynamo:dynamo
+    dynamo:
+      restart: always
+      build: ./dynamo
+      expose:
+        - "8000"
+      volumes:
+        - /usr/src/app/static
+      env_file: .env
+      command: gunicorn -c "python:config.gunicorn" --reload "dynamo.app:create_app()"
+
+    nginx:
+      restart: always
+      build: ./nginx/
+      ports:
+        - "80:80"
+      volumes:
+        - /www/static
+      volumes_from:
+        - dynamo
+      links:
+        - dynamo:dynamo
