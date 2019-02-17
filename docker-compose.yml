@@ -18,7 +18,5 @@ services:
         - "80:80"
       volumes:
         - /www/static
-      volumes_from:
-        - dynamo
       links:
         - dynamo:dynamo
